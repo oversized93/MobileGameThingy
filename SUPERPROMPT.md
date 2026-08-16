@@ -10,7 +10,7 @@ You are the lead engineer building a multiplayer medieval-fantasy game that fuse
 
 - **City builder**: you physically construct a town on a board.
 - **Tower defense**: that town IS the defense map enemies attack.
-- **Auto-battler**: rounds, shops, synergies, and hands-off combat where your build fights for you.
+- **Auto-battler**: rounds, synergies, and hands-off combat where your build fights for you.
 
 These are not three glued-together systems. They are **one system viewed from three directions**: the town is simultaneously your economy, your army's origin, and your defensive board.
 
@@ -48,7 +48,7 @@ These are not three glued-together systems. They are **one system viewed from th
 Matches progress through Ages that gate card tiers and escalate spectacle: **Age I Settlement → Age II Township → Age III Stronghold → Age IV Realm.**
 
 - Age advancement is **player-paced, TFT-style**: you spend gold to upgrade your **Keep**, and the Keep's level IS your Age. Greedy players stay low-Age for economy; aggressive players race Ages for stronger units.
-- **The Keep is the universal central anchor and objective**, occupies a fixed central footprint, is upgradeable, and — at Age II — the upgrade forks into a **Keep specialization that defines your tech path**: e.g. `Great Hall` (Nord/martial path), `Citadel` (Imperial/defense-economy path), `Arcane Spire` (Mage path). Specialization changes which higher-tier cards appear in your shop offers and gives one passive. Any build remains possible — specialization nudges, never locks.
+- **The Keep is the universal central anchor and objective**, occupies a fixed central footprint, is upgradeable, and — at Age II — the upgrade forks into a **Keep specialization that defines your tech path**: e.g. `Great Hall` (Nord/martial path), `Citadel` (Imperial/defense-economy path), `Arcane Spire` (Mage path). Specialization adds a small set of path-exclusive cards to your build bar (bonus slots on top of your 14-card deck) and gives one passive. Any build remains possible — specialization nudges, never locks.
 - Late game must feel dramatically transformed: Round 1 is five cottages and a picket fence vs. 5 bandits; the final rounds are a walled stone town with trebuchets, battlemages, flying units, and 50+ troops per side. Protect this escalation.
 
 ---
@@ -73,7 +73,7 @@ Matches progress through Ages that gate card tiers and escalate spectacle: **Age
 
 ## 4. The Card System (the entire interface)
 
-Cards are the ONLY way anything enters the game. Four kinds, one interaction (drag from hand/shop → drop on target):
+Cards are the ONLY way anything enters the game. Four kinds, one interaction (drag from build bar → drop on target):
 
 1. **Structures** — dropped on empty plots: `Blacksmith`, `Archer Tower`, `Farmstead`, `Barracks`, `Market`, `Tavern`, `Temple`, `Mage Tower`, `Wall`, `Gatehouse`, `Hunting Lodge`, `Granary`…
 2. **Units/Residents** — dropped into the town (they take up NO plot; they're people): `Nord Shieldbearer`, `Hunter`, `Spearman`, `Battlemage`, `Village Priest`, `Orc Mercenary`… Special residents can be dropped **onto matching buildings** to transform them (see Attachments).
@@ -82,12 +82,13 @@ Cards are the ONLY way anything enters the game. Four kinds, one interaction (dr
 
 **Attachments are a signature interaction:** dropping a card onto another card should feel amazing — the building visually transforms (`Blacksmith` + `Master Blacksmith` → `Masterwork Forge` with new mesh/glow), stats change, and the tooltip shows the fused identity.
 
-**Upgrading by duplicates:** drop an identical card onto an existing one → it levels up (Level 1→2→3). Level-ups improve numbers and visuals, never add new rules text.
+**Upgrading by duplicates:** buy a second copy of a card you've already placed and drop it **onto** the existing one → it levels up (Level 1→2→3) instead of standing alone. Place-wide vs. stack-tall is a real decision every time (two Level-1 Archer Towers covering two roads, or one Level-2 covering one). Level-ups improve numbers and visuals, never add new rules text.
 
-**Shop model — hybrid deck + offers:**
-- **Pre-match deckbuilding exists:** players construct a deck from their unlocked collection; that deck defines the **pool** their in-match shop draws from (plus a shared core pool of staples so every deck functions). Matches stay fair: deckbuilding is about *which* cards can appear for you, never stat boosts.
-- Each Build Phase you're offered a **shop row of 5 cards** rolled from your pool, filtered by your Age/Keep path. Buy with gold. **Reroll** costs 1 gold. **Freeze** holds the row. (Battlegrounds grammar, sourced from your own deck.)
-- **Hand limit (decided):** no persistent hand — what you buy this phase you place this phase (bought-but-unplaced cards auto-convert to a small gold refund at combat start). This keeps decisions immediate and mobile-legible; revisit only if playtests demand banking.
+**Build menu — Clash Royale model (no random shop):**
+- **Pre-match deckbuilding is the strategic identity:** players construct a deck of **14 cards** from their unlocked collection (tune 12–16 in playtests). The size limit is load-bearing — painful cuts at deck-build time are where build identity comes from. Matches stay fair: deckbuilding chooses *which* cards you have access to, never stat boosts.
+- **In-match, your entire deck is always visible and always buyable**, gold-gated, in a compact build bar. No shop rolls, no reroll, no freeze, no hand. You may buy multiple copies of any card (each purchase costs full price; costs may escalate per copy for powerful cards — one tunable curve).
+- Cards are **Age-gated**: higher-tier cards in your deck sit visibly locked (greyed with their Age badge) until your Keep reaches that Age. Seeing your locked late-game bombs is the carrot for Keep investment.
+- **Where adaptation comes from (since it's not shop RNG):** the 8-player field. Your build may crush one opponent and get trounced by another — rotating pairings force you to rebalance gold spending (defense vs. warband vs. economy vs. Age race) round by round against who you're actually facing. Scouting (Section 7) is the skill that feeds this. The RNG budget lives in combat rolls, PvE rounds, district offerings, and raid loot — never in access to your own deck.
 
 **Rarity:** Common / Rare / Epic / Legendary. Rarity = **unusualness of effect**, not raw power (`Legendary Dragon Roost` does a wild thing; it is not simply "+50% tower").
 
@@ -136,7 +137,7 @@ Every unit has ONE visible behavior word on its card, and it always does that: `
 
 **RNG level 4–5/10:** damage rolls within ±15%, crit chances, revive procs — spice, never swings that invalidate a build. All rolls from the seeded stream.
 
-**Scouting must be earned:** by default you see only your next attacker's name/leader/Age. Cards/buildings unlock more: `Watchtower` reveals their trait counts; `Spy` (unit) lets you view their full town for one build phase; `Raven Roost` reveals their doctrine. Information is a build lane, not a freebie.
+**Scouting must be earned — and it is THE adaptation mechanism:** with no shop RNG, out-adapting the field is the core skill, and information is its fuel. By default you see only your next attacker's name/leader/Age. Cards/buildings unlock more: `Watchtower` reveals their trait counts; `Spy` (unit) lets you view their full town for one build phase; `Raven Roost` reveals their doctrine. Information is a build lane, not a freebie — a player who invests in scouting is buying the ability to counter-build.
 
 ---
 
@@ -155,7 +156,7 @@ Every unit has ONE visible behavior word on its card, and it always does that: `
 
 - **Competitive ranked from day one:** 8-player FFA, placement points, visible rank. Casual uses identical rules.
 - **Bots are first-class:** bots build towns using the exact same card/command system as humans (no cheating, no scripted towns) — they fill lobbies and power the prototype. Write bot logic against the same command queue a UI would emit.
-- **Meta progression:** unlock **cards, leaders, cosmetics — never stat upgrades**. Collection feeds pre-match deckbuilding. Matches are always stat-fair.
+- **Meta progression:** unlock **cards, leaders, cosmetics — never stat upgrades**. Collection feeds pre-match deckbuilding (14 slots, so unlocks widen *options*, not power). Matches are always stat-fair.
 - **Monetization:** battle pass + cosmetics (town skins, leader skins, building styles, victory banners). Nothing pay-to-win, no card power levels for money.
 - **No single-player campaign** planned — multiplayer focus. **Duos later:** don't build it, but don't preclude it (team ID on players; damage/pairing logic reads team ID).
 
@@ -170,18 +171,20 @@ In scope:
 2. Rounds: Build (60s, skippable) → Combat (45s cap) → Results. Ages I–II only; Keep upgrade purchasable once (Age II, generic — no specialization forks yet).
 3. **12 structure cards:** Keep(pre-placed), House, Farm, Barracks, Archer Tower, Blacksmith, Market, Wall, Gatehouse, Tavern, Temple, Spike Pit(trap).
 4. **8 unit types:** Footman(from Barracks), Archer, Nord Shieldbearer, Hunter, Spearman, Priest, Raider Wolfpack(PvE), Goblin(PvE).
-5. Shop row of 5, reroll, freeze; gold economy (stipend + Market + raid loot); Supply as army cap; population from Houses.
+5. Build bar: a fixed 14-card starter deck (all slice cards, no deckbuilding UI yet), everything always visible and gold-gated, Age-II cards shown locked until the Keep upgrade; gold economy (stipend + Market + raid loot); Supply as army cap; population from Houses.
 6. Traits: NORD / WARRIOR / RANGER / CRAFTSMAN with 2/4 breakpoints; 4 adjacency pairs (Blacksmith+Barracks, Farm+Windmill→(use Farm+Farm merge bonus instead if simpler), Watchtower+Wall, Temple+Graveyard→cut if Graveyard out of scope — minimum 3 pairs).
-7. Duplicate-merge leveling (2 levels); ONE attachment card (`Veteran Captain` → Barracks) to prove the signature interaction.
+7. Duplicate-merge leveling (buy a second copy, drop it on the first — 2 levels); ONE attachment card (`Veteran Captain` → Barracks) to prove the signature interaction.
 8. Warband FRONT/MID/BACK board; drag units between town and warband; one raid doctrine picker (Breach/Plunder/Decapitate); one defense doctrine picker (Hold Walls/Defend Keep).
 9. Deterministic auto-combat with behavior words (Guard/Raider/Siegebreaker/Skirmisher), simple road-preferred pathfinding, building blocking/destruction, squad rendering with pooled HP bars, timer-expiry partial Keep damage.
 10. One PvE round (Round 3 Goblin Raid) hitting all towns.
 11. One Leader (`The Jarl`): passive (+Keep HP), fights in defense, one active (`Rally`, tap to cast during combat) — the only in-combat input.
 12. Three.js diorama rendering with **cohesive low-poly primitive placeholder art** (boxes/cylinders with good palette, shadows, and scale language — gameplay correctness over beauty, but keep it charming), rotatable/zoomable camera, drag-and-drop working with mouse AND touch, health bars on everything, trait counter panel, gold/supply/pop top bar, Keep HP for all 4 players.
-13. Bots that buy from their own shops, place sensibly (economy early, defense before combat), assign warbands, and pick doctrines — same command API as the player.
+13. Bots that spend gold from their own build bars, place sensibly (economy early, defense before combat), assign warbands, and pick doctrines — same command API as the player.
 
 Explicitly OUT of the slice: networking, accounts, deckbuilding/collection/meta, ranked, monetization, audio, Ages III–IV, Keep specializations, flying/siege units, spells/events, scouting cards, weather, day/night, visual merging, auto-evolving building meshes, second expansions, moving-buildings-for-gold (sell only), leaders beyond the Jarl, portrait layout polish (don't break, don't polish).
 
-**Development order:** (1) sim core: board/state/commands/tick loop + headless tests → (2) economy & shop → (3) combat resolution headless (log-verified battles) → (4) Three.js render of sim → (5) drag-drop UI → (6) bots → (7) full match loop + PvE round → (8) juice pass (placement thunk, synergy flash, combat readability). Keep a running `pnpm test` suite over the sim at every step; the sim must simulate a full 4-player match headless in milliseconds.
+**Development order:** (1) sim core: board/state/commands/tick loop + headless tests → (2) economy & build bar → (3) combat resolution headless (log-verified battles) → (4) Three.js render of sim → (5) drag-drop UI → (6) bots → (7) full match loop + PvE round → (8) juice pass (placement thunk, synergy flash, combat readability). Keep a running `pnpm test` suite over the sim at every step; the sim must simulate a full 4-player match headless in milliseconds.
 
-**Definition of done:** a stranger on a phone browser can finish a full match unaided, understand why they won or lost, and want to play again. The core loop to validate: *see shop → make 2–4 meaningful drops → watch your machine fight → adapt.* The addictive beat is **"short planning, a few meaningful drops, watch it play out"** — if build phases feel like frantic APM or like empty waiting, tune phase length and shop size until they feel like a satisfying breath. That feel is the product. Everything else serves it.
+**Definition of done:** a stranger on a phone browser can finish a full match unaided, understand why they won or lost, and want to play again. The core loop to validate: *check gold and the field → make 2–4 meaningful drops from your deck → watch your machine fight → adapt.* The addictive beat is **"short planning, a few meaningful drops, watch it play out"** — if build phases feel like frantic APM or like empty waiting, tune phase length, income, and card costs until they feel like a satisfying breath. That feel is the product. Everything else serves it.
+
+**Playtest watchpoint (the one risk of the no-shop model):** if every match's first three rounds look identical across skilled players (converged opening build orders), that's the signal to add friction — steeper per-copy cost curves, stronger district/terrain differentiation, or earlier PvE variance. Do NOT reintroduce shop RNG as the first fix; the fix is making the field's threats diverge earlier.
