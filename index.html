@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Bastion — Town Defense Auto-Battler</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏰</text></svg>" />
+  <link rel="stylesheet" href="/src/ui/styles.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="scene"></canvas>
+    <div id="hud">
+      <div id="topbar">
+        <div class="stat" id="stat-round">Round 1</div>
+        <div class="stat gold" id="stat-gold">10g</div>
+        <div class="stat" id="stat-pop">Pop 0/4</div>
+        <div class="stat" id="stat-supply">Supply 0/6</div>
+        <div class="stat" id="stat-age">Age I</div>
+        <div class="stat timer" id="stat-timer"></div>
+      </div>
+      <div id="keeps"></div>
+      <div id="traits"></div>
+      <div id="message"></div>
+      <div id="raid-ticker"></div>
+      <div id="sidepanel">
+        <div id="doctrines">
+          <div class="doctrine-group">
+            <span class="doc-label">Raid</span>
+            <div class="doc-btns" id="raid-doctrine"></div>
+          </div>
+          <div class="doctrine-group">
+            <span class="doc-label">Defense</span>
+            <div class="doc-btns" id="defense-doctrine"></div>
+          </div>
+        </div>
+        <div id="warband-panel">
+          <div class="wb-title">Warband <span class="wb-hint">tap units to assign</span></div>
+          <div class="wb-zone" id="wb-defense"><span class="wb-zone-label">🏰 Defend</span></div>
+          <div class="wb-zone" id="wb-FRONT"><span class="wb-zone-label">⚔️ Front</span></div>
+          <div class="wb-zone" id="wb-MID"><span class="wb-zone-label">🏹 Mid</span></div>
+          <div class="wb-zone" id="wb-BACK"><span class="wb-zone-label">✨ Back</span></div>
+        </div>
+      </div>
+      <button id="rally-btn" class="hidden">⚡ RALLY</button>
+      <button id="keep-upgrade" class="hidden">Upgrade Keep (12g) → Age II</button>
+      <button id="skip-btn" class="hidden">Start Battle ▶</button>
+      <div id="buildbar"></div>
+      <div id="overlay" class="hidden"></div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

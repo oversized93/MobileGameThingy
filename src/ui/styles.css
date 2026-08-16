@@ -1,0 +1,205 @@
+/* Bastion HUD — warm medieval palette over the 3D diorama. */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: #171410;
+  color: #f0e9da;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+}
+#app { position: relative; width: 100%; height: 100%; }
+#scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#hud { position: absolute; inset: 0; pointer-events: none; }
+#hud > * { pointer-events: auto; }
+
+/* ---- top bar ---- */
+#topbar {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; gap: 6px; padding: 8px 10px;
+  justify-content: center; flex-wrap: wrap;
+  background: linear-gradient(rgba(20, 16, 10, 0.85), transparent);
+  pointer-events: none;
+}
+.stat {
+  background: rgba(34, 28, 20, 0.92);
+  border: 1px solid #4a3f2e;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.stat.gold { color: #e8b64c; border-color: #6b5426; }
+.stat.timer { color: #e8d9b0; min-width: 52px; text-align: center; }
+.stat.timer.urgent { color: #e86a5c; }
+
+/* ---- keep HP strip ---- */
+#keeps {
+  position: absolute; top: 44px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; pointer-events: none;
+}
+.keepchip {
+  background: rgba(34, 28, 20, 0.92); border: 1px solid #4a3f2e; border-radius: 6px;
+  padding: 3px 8px; font-size: 11px; min-width: 84px;
+}
+.keepchip .kc-name { font-weight: 700; }
+.keepchip .kc-bar { height: 4px; background: #201a12; border-radius: 2px; margin-top: 3px; overflow: hidden; }
+.keepchip .kc-fill { height: 100%; background: #7fae6a; border-radius: 2px; }
+.keepchip.dead { opacity: 0.45; }
+.keepchip.you { border-color: #c9914d; }
+
+/* ---- trait counters ---- */
+#traits {
+  position: absolute; left: 10px; top: 96px;
+  display: flex; flex-direction: column; gap: 4px; pointer-events: none;
+}
+.trait-row {
+  background: rgba(34, 28, 20, 0.9); border: 1px solid #4a3f2e; border-radius: 5px;
+  font-size: 11px; padding: 3px 8px; letter-spacing: 0.04em;
+}
+.trait-row.active { border-color: #c9914d; color: #e8b64c; }
+
+/* ---- message + ticker ---- */
+#message {
+  position: absolute; top: 74px; left: 50%; transform: translateX(-50%);
+  font-size: 14px; font-weight: 700; color: #e8d9b0;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+  pointer-events: none; text-align: center; max-width: 90%;
+}
+#raid-ticker {
+  position: absolute; bottom: 118px; left: 10px;
+  font-size: 11px; color: #cbbfa4; pointer-events: none;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  display: flex; flex-direction: column; gap: 2px; max-width: 46%;
+}
+
+/* ---- side panel: doctrines + warband ---- */
+#sidepanel {
+  position: absolute; right: 8px; top: 96px; width: 168px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+#doctrines { display: flex; flex-direction: column; gap: 5px; }
+.doctrine-group {
+  background: rgba(34, 28, 20, 0.92); border: 1px solid #4a3f2e; border-radius: 6px; padding: 5px;
+}
+.doc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #a5977c; }
+.doc-btns { display: flex; gap: 3px; margin-top: 3px; flex-wrap: wrap; }
+.doc-btn {
+  flex: 1; font-size: 10px; padding: 3px 4px; border-radius: 4px;
+  background: #241e15; color: #cbbfa4; border: 1px solid #4a3f2e; cursor: pointer;
+  white-space: nowrap;
+}
+.doc-btn.on { background: #c9914d; color: #171410; font-weight: 700; border-color: #c9914d; }
+
+#warband-panel {
+  background: rgba(34, 28, 20, 0.92); border: 1px solid #4a3f2e; border-radius: 6px; padding: 6px;
+  max-height: 44vh; overflow-y: auto;
+}
+.wb-title { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+.wb-hint { font-weight: 400; color: #a5977c; font-size: 9px; }
+.wb-zone {
+  border: 1px dashed #4a3f2e; border-radius: 5px; padding: 3px; margin-top: 4px;
+  min-height: 26px; display: flex; flex-wrap: wrap; gap: 3px; align-items: center;
+}
+.wb-zone-label { font-size: 9px; color: #a5977c; width: 100%; }
+.unit-chip {
+  background: #3a3222; border: 1px solid #5c4f36; color: #e8d9b0;
+  font-size: 10px; border-radius: 4px; padding: 2px 6px; cursor: pointer; white-space: nowrap;
+}
+.unit-chip.lvl2 { border-color: #c9914d; color: #e8b64c; }
+.unit-chip:active { transform: scale(0.95); }
+
+/* ---- build bar ---- */
+#buildbar {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 6px; padding: 8px 10px 10px;
+  overflow-x: auto; overflow-y: hidden;
+  background: linear-gradient(transparent, rgba(20, 16, 10, 0.92) 30%);
+  scrollbar-width: thin;
+}
+.card {
+  flex: 0 0 auto; width: 86px; border-radius: 8px; padding: 6px;
+  background: linear-gradient(#3a3222, #2b2517);
+  border: 1px solid #5c4f36; cursor: grab; position: relative;
+  transition: transform 0.1s ease;
+}
+.card:hover { transform: translateY(-3px); }
+.card.dragging { opacity: 0.45; }
+.card.unaffordable { filter: grayscale(0.8) brightness(0.6); }
+.card.locked { filter: grayscale(1) brightness(0.45); }
+.card .c-name { font-size: 10.5px; font-weight: 700; line-height: 1.15; }
+.card .c-cost {
+  position: absolute; top: -5px; right: -4px;
+  background: #e8b64c; color: #171410; font-size: 10px; font-weight: 800;
+  border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center;
+  border: 1px solid #171410;
+}
+.card .c-icon { font-size: 20px; text-align: center; padding: 2px 0; }
+.card .c-desc { font-size: 8.5px; color: #a5977c; line-height: 1.2; margin-top: 1px; }
+.card .c-lock {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: #e8d9b0; background: rgba(0,0,0,0.35); border-radius: 8px;
+  font-weight: 700; text-align: center;
+}
+.card .c-traits { display: flex; gap: 2px; margin-top: 2px; flex-wrap: wrap; }
+.c-trait { font-size: 7.5px; background: #241e15; border-radius: 3px; padding: 1px 3px; color: #c9914d; }
+
+/* ---- buttons ---- */
+#skip-btn, #keep-upgrade, #rally-btn {
+  position: absolute; padding: 8px 16px; border-radius: 8px; border: none;
+  font-weight: 800; cursor: pointer; font-size: 13px;
+}
+#skip-btn { bottom: 128px; right: 10px; background: #c9914d; color: #171410; }
+#keep-upgrade { bottom: 128px; left: 10px; background: #3a3222; color: #e8b64c; border: 1px solid #6b5426; font-size: 11px; }
+#rally-btn {
+  bottom: 140px; left: 50%; transform: translateX(-50%);
+  background: #e8b64c; color: #171410; font-size: 16px; padding: 12px 26px;
+  box-shadow: 0 0 24px rgba(232, 182, 76, 0.5);
+}
+#rally-btn:disabled { opacity: 0.35; box-shadow: none; }
+.hidden { display: none !important; }
+
+/* ---- overlay (results / game over / expansion) ---- */
+#overlay {
+  position: absolute; inset: 0; background: rgba(12, 10, 6, 0.82);
+  display: flex; align-items: center; justify-content: center; z-index: 10;
+}
+.panel {
+  background: #241e15; border: 1px solid #5c4f36; border-radius: 12px;
+  padding: 22px 26px; max-width: 420px; width: 90%; text-align: center;
+  max-height: 80vh; overflow-y: auto;
+}
+.panel h2 { color: #e8b64c; margin-bottom: 10px; font-size: 20px; }
+.panel p { font-size: 13px; color: #cbbfa4; line-height: 1.5; margin-bottom: 8px; }
+.panel .report { text-align: left; font-size: 12px; margin: 8px 0; }
+.panel button {
+  margin-top: 12px; padding: 10px 22px; border-radius: 8px; border: none;
+  background: #c9914d; color: #171410; font-weight: 800; cursor: pointer; font-size: 14px;
+}
+.panel .choice {
+  display: block; width: 100%; text-align: left; margin-top: 8px;
+  background: #3a3222; color: #e8d9b0; border: 1px solid #5c4f36; font-weight: 600;
+}
+.panel .choice:hover { border-color: #c9914d; }
+.panel .choice b { color: #e8b64c; }
+
+/* ---- placement ghost / drag feedback ---- */
+#drag-ghost {
+  position: fixed; pointer-events: none; z-index: 50;
+  font-size: 26px; transform: translate(-50%, -70%);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+}
+#place-error {
+  position: fixed; pointer-events: none; z-index: 51;
+  background: rgba(184, 92, 92, 0.95); color: #fff; font-size: 11px; font-weight: 700;
+  border-radius: 5px; padding: 3px 8px; transform: translate(-50%, -160%);
+}
+
+@media (max-width: 700px) {
+  #sidepanel { width: 128px; top: 120px; }
+  .card { width: 72px; }
+  .card .c-desc { display: none; }
+  #traits { top: 130px; }
+}
