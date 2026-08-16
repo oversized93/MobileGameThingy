@@ -438,7 +438,6 @@ function frame(now: number): void {
         // feed ticker occasionally from the player's raid (background)
       }
       view.syncCombat(watched);
-      view.syncTown(playerTown());
       view.syncBuildingBars(playerTown(), true);
       if (watched.done && !watchedFinished) {
         watchedFinished = true;
@@ -466,6 +465,8 @@ function frame(now: number): void {
   topSupply.textContent = `🍞 ${supplyUsed(town)}/${supplyProvided(town)}`;
   topAge.textContent = town.age === 1 ? 'Age I' : 'Age II';
 
+  // every frame so placement pop-in and repair animations always play out
+  view.syncTown(playerTown());
   view.render(dt);
   requestAnimationFrame(frame);
 }
