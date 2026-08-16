@@ -53,7 +53,7 @@ export class SceneView {
 
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x2a3540);
-    this.scene.fog = new THREE.Fog(0x2a3540, 18, 40);
+    this.scene.fog = new THREE.Fog(0x2a3540, 34, 70);
 
     this.camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
     this.camera.position.set(KEEP_X, 10, KEEP_Y - 9);
@@ -66,7 +66,7 @@ export class SceneView {
     this.controls.enableRotate = false;
     this.controls.enablePan = false;
     this.controls.minDistance = 6;
-    this.controls.maxDistance = 16;
+    this.controls.maxDistance = 34;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.08;
 
@@ -118,12 +118,45 @@ export class SceneView {
     this.desiredAzimuth += Math.PI / 4;
   }
 
+  // Frame the full board: pick the closest distance (at an aspect-appropriate
+  // tilt) where every board corner is on screen with margin for the HUD.
+  frameBoard(): void {
+    const t = this.controls.target;
+    // steeper (more top-down) on tall/narrow screens so the square board fits
+    const polar = this.camera.aspect < 0.8 ? 0.52 : 0.72; // radians from vertical
+    const az = this.desiredAzimuth;
+    const corners = [
+      new THREE.Vector3(-0.6, 0, -0.6),
+      new THREE.Vector3(SIZE - 0.4, 0, -0.6),
+      new THREE.Vector3(-0.6, 0, SIZE - 0.4),
+      new THREE.Vector3(SIZE - 0.4, 0, SIZE - 0.4),
+    ];
+    let dist = 8;
+    for (; dist < 33; dist += 0.5) {
+      this.camera.position.set(
+        t.x + dist * Math.sin(polar) * Math.sin(az),
+        t.y + dist * Math.cos(polar),
+        t.z + dist * Math.sin(polar) * Math.cos(az),
+      );
+      this.camera.lookAt(t);
+      this.camera.updateMatrixWorld(true);
+      const fits = corners.every((c) => {
+        const p = c.clone().project(this.camera);
+        // asymmetric vertical margin: keep the near rows above the build bar
+        return Math.abs(p.x) < 0.9 && p.y > -0.56 && p.y < 0.52;
+      });
+      if (fits) break;
+    }
+    this.controls.update();
+  }
+
   resize(): void {
     const w = window.innerWidth;
     const h = window.innerHeight;
     this.renderer.setSize(w, h, false);
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
+    this.frameBoard();
   }
 
   buildTiles(grid: Tile[][]): void {
