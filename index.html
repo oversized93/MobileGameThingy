@@ -11,18 +11,21 @@
   <div id="app">
     <canvas id="scene"></canvas>
     <div id="hud">
-      <div id="topbar">
-        <div class="stat" id="stat-round">Round 1</div>
-        <div class="stat gold" id="stat-gold">10g</div>
-        <div class="stat" id="stat-pop">Pop 0/4</div>
-        <div class="stat" id="stat-supply">Supply 0/6</div>
-        <div class="stat" id="stat-age">Age I</div>
-        <div class="stat timer" id="stat-timer"></div>
+      <div id="topwrap">
+        <div id="topbar">
+          <div class="stat" id="stat-round">Round 1</div>
+          <div class="stat gold" id="stat-gold">10g</div>
+          <div class="stat" id="stat-pop">Pop 0/4</div>
+          <div class="stat" id="stat-supply">Supply 0/6</div>
+          <div class="stat" id="stat-age">Age I</div>
+          <div class="stat timer" id="stat-timer"></div>
+        </div>
+        <div id="keeps"></div>
+        <div id="message"></div>
       </div>
-      <div id="keeps"></div>
       <div id="traits"></div>
-      <div id="message"></div>
       <div id="raid-ticker"></div>
+      <button id="panel-toggle" title="Army panel">⚔️</button>
       <div id="sidepanel">
         <div id="doctrines">
           <div class="doctrine-group">

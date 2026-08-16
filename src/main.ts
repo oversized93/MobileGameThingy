@@ -148,6 +148,16 @@ window.addEventListener('pointerup', (e) => {
 // camera zoom pauses while a card drag is in flight (rotation is button-only)
 $('rotate-btn').addEventListener('click', () => view.rotateStep());
 
+// collapsible army panel: starts hidden on portrait/narrow screens
+const sidepanel = $('sidepanel');
+const panelToggle = $('panel-toggle');
+function setPanel(open: boolean): void {
+  sidepanel.classList.toggle('collapsed', !open);
+  panelToggle.classList.toggle('open', open);
+}
+panelToggle.addEventListener('click', () => setPanel(sidepanel.classList.contains('collapsed')));
+setPanel(!(window.innerHeight > window.innerWidth || window.innerWidth < 700));
+
 // ---------- warband panel ----------
 function renderWarband(): void {
   const town = playerTown().state;

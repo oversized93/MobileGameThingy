@@ -15,11 +15,16 @@ body {
 #hud > * { pointer-events: auto; }
 
 /* ---- top bar ---- */
-#topbar {
+#topwrap {
   position: absolute; top: 0; left: 0; right: 0;
-  display: flex; gap: 6px; padding: 8px 10px;
-  justify-content: center; flex-wrap: wrap;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 8px 10px 14px;
   background: linear-gradient(rgba(20, 16, 10, 0.85), transparent);
+  pointer-events: none;
+}
+#topbar {
+  display: flex; gap: 6px;
+  justify-content: center; flex-wrap: wrap;
   pointer-events: none;
 }
 .stat {
@@ -37,8 +42,7 @@ body {
 
 /* ---- keep HP strip ---- */
 #keeps {
-  position: absolute; top: 44px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 6px; pointer-events: none;
+  display: flex; gap: 6px; pointer-events: none; flex-wrap: wrap; justify-content: center;
 }
 .keepchip {
   background: rgba(34, 28, 20, 0.92); border: 1px solid #4a3f2e; border-radius: 6px;
@@ -63,10 +67,10 @@ body {
 
 /* ---- message + ticker ---- */
 #message {
-  position: absolute; top: 74px; left: 50%; transform: translateX(-50%);
   font-size: 14px; font-weight: 700; color: #e8d9b0;
   text-shadow: 0 1px 4px rgba(0,0,0,0.8);
   pointer-events: none; text-align: center; max-width: 90%;
+  min-height: 1.2em;
 }
 #raid-ticker {
   position: absolute; bottom: 118px; left: 10px;
@@ -75,11 +79,26 @@ body {
   display: flex; flex-direction: column; gap: 2px; max-width: 46%;
 }
 
-/* ---- side panel: doctrines + warband ---- */
+/* ---- side panel: doctrines + warband (collapsible) ---- */
 #sidepanel {
-  position: absolute; right: 8px; top: 96px; width: 168px;
+  position: absolute; right: 8px; top: 116px; width: 168px;
   display: flex; flex-direction: column; gap: 8px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
+#sidepanel.collapsed {
+  transform: translateX(calc(100% + 16px));
+  opacity: 0;
+  pointer-events: none;
+}
+#panel-toggle {
+  position: absolute; right: 8px; top: 72px;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(34, 28, 20, 0.92); color: #e8d9b0;
+  border: 1px solid #4a3f2e; font-size: 17px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5;
+}
+#panel-toggle.open { background: #c9914d; border-color: #c9914d; }
 #doctrines { display: flex; flex-direction: column; gap: 5px; }
 .doctrine-group {
   background: rgba(34, 28, 20, 0.92); border: 1px solid #4a3f2e; border-radius: 6px; padding: 5px;
@@ -206,8 +225,10 @@ body {
 }
 
 @media (max-width: 700px) {
-  #sidepanel { width: 128px; top: 120px; }
+  #sidepanel { width: 150px; top: 200px; }
   .card { width: 72px; }
   .card .c-desc { display: none; }
-  #traits { top: 160px; }
+  #rotate-btn { top: 152px; }
+  #panel-toggle { top: 152px; }
+  #traits { top: 200px; }
 }
