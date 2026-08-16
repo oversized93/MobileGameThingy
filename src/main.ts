@@ -87,6 +87,7 @@ function startDrag(cardId: string, x: number, y: number): void {
   if (def.age > town.age) { say(`${def.name} unlocks at Age II — upgrade your Keep`); return; }
   if (town.gold < def.cost) { say('Not enough gold'); return; }
   dragging = cardId;
+  view.controls.enabled = false; // no zoom while a card is in flight
   ghost = document.createElement('div');
   ghost.id = 'drag-ghost';
   ghost.textContent = CARD_ICONS[cardId] ?? '❔';
@@ -111,6 +112,7 @@ function endDrag(x: number, y: number): void {
   if (!dragging) return;
   const cardId = dragging;
   dragging = null;
+  view.controls.enabled = true;
   ghost?.remove();
   ghost = null;
   view.hideHighlight();
@@ -143,11 +145,8 @@ window.addEventListener('pointermove', (e) => {
 window.addEventListener('pointerup', (e) => {
   if (dragging) endDrag(e.clientX, e.clientY);
 });
-// disable camera while dragging
-canvas.addEventListener('pointerdown', () => {
-  if (dragging) view.controls.enabled = false;
-});
-setInterval(() => { view.controls.enabled = !dragging; }, 100);
+// camera zoom pauses while a card drag is in flight (rotation is button-only)
+$('rotate-btn').addEventListener('click', () => view.rotateStep());
 
 // ---------- warband panel ----------
 function renderWarband(): void {

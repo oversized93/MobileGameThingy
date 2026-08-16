@@ -43,6 +43,7 @@ export class SceneView {
   hpBars = new Map<string, { bg: THREE.Sprite; fill: THREE.Sprite }>();
   effects: Array<{ mesh: THREE.Object3D; life: number }> = [];
   tileGroup = new THREE.Group();
+  private desiredAzimuth = 0;
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -57,14 +58,17 @@ export class SceneView {
     this.camera = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
     this.camera.position.set(KEEP_X, 10, KEEP_Y - 9);
 
+    // Mobile-first camera: one finger NEVER moves the camera (it's reserved for
+    // drag-drop). Fixed polished angle; pinch/wheel zoom only; rotation happens
+    // exclusively via the snap-rotate button (rotateStep).
     this.controls = new OrbitControls(this.camera, canvas);
     this.controls.target.set(KEEP_X, 0, KEEP_Y);
-    this.controls.maxPolarAngle = Math.PI * 0.44;
-    this.controls.minDistance = 5;
-    this.controls.maxDistance = 22;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = false;
+    this.controls.minDistance = 6;
+    this.controls.maxDistance = 16;
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.08;
-    this.controls.enablePan = false;
 
     // lights: warm sun + cool sky fill
     const sun = new THREE.DirectionalLight(0xffe8c0, 2.6);
@@ -100,8 +104,18 @@ export class SceneView {
     this.highlight.visible = false;
     this.scene.add(this.highlight);
 
+    this.desiredAzimuth = Math.atan2(
+      this.camera.position.x - KEEP_X,
+      this.camera.position.z - KEEP_Y,
+    );
+
     this.resize();
     window.addEventListener('resize', () => this.resize());
+  }
+
+  // Snap-rotate the view 45° (the only rotation control — mobile-safe).
+  rotateStep(): void {
+    this.desiredAzimuth += Math.PI / 4;
   }
 
   resize(): void {
@@ -337,6 +351,21 @@ export class SceneView {
         this.scene.remove(e.mesh);
         this.effects.splice(i, 1);
       }
+    }
+    // Ease toward the desired snap-rotation angle
+    const target = this.controls.target;
+    const off = this.camera.position.clone().sub(target);
+    const curAz = Math.atan2(off.x, off.z);
+    let delta = this.desiredAzimuth - curAz;
+    while (delta > Math.PI) delta -= Math.PI * 2;
+    while (delta < -Math.PI) delta += Math.PI * 2;
+    if (Math.abs(delta) > 0.001) {
+      const step = delta * Math.min(1, dt * 6);
+      const cos = Math.cos(step);
+      const sin = Math.sin(step);
+      const nx = off.x * cos + off.z * sin;
+      const nz = -off.x * sin + off.z * cos;
+      this.camera.position.set(target.x + nx, this.camera.position.y, target.z + nz);
     }
     this.controls.update();
     this.renderer.render(this.scene, this.camera);

@@ -52,7 +52,7 @@ body {
 
 /* ---- trait counters ---- */
 #traits {
-  position: absolute; left: 10px; top: 96px;
+  position: absolute; left: 10px; top: 142px;
   display: flex; flex-direction: column; gap: 4px; pointer-events: none;
 }
 .trait-row {
@@ -159,6 +159,14 @@ body {
   box-shadow: 0 0 24px rgba(232, 182, 76, 0.5);
 }
 #rally-btn:disabled { opacity: 0.35; box-shadow: none; }
+#rotate-btn {
+  position: absolute; top: 96px; left: 10px;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(34, 28, 20, 0.92); color: #e8d9b0;
+  border: 1px solid #4a3f2e; font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+#rotate-btn:active { background: #c9914d; color: #171410; }
 .hidden { display: none !important; }
 
 /* ---- overlay (results / game over / expansion) ---- */
@@ -201,5 +209,5 @@ body {
   #sidepanel { width: 128px; top: 120px; }
   .card { width: 72px; }
   .card .c-desc { display: none; }
-  #traits { top: 130px; }
+  #traits { top: 160px; }
 }
